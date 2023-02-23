@@ -78,5 +78,47 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.VerificarExistencia(CPF);
         }
+
+        public bool VerificarCPF(string CPF)
+        {
+            int[] numerosCPF = new int[11];
+
+            CPF = new string(CPF.Where(char.IsDigit).ToArray());
+
+            if (CPF.Length != 11)
+                return false;
+
+
+            for (int i = 0; i < 11; i++)
+            {
+                if (!int.TryParse(CPF[i].ToString(), out numerosCPF[i]))
+                    return false;
+
+            }
+
+            // Verifica o primeiro dígito verificador do CPF
+            int soma = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                soma += numerosCPF[i] * (10 - i);
+            }
+            int resto = soma % 11;
+            int dv1 = resto < 2 ? 0 : 11 - resto;
+            if (numerosCPF[9] != dv1)
+                return false;
+
+            // Verifica o segundo dígito verificador do CPF
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                soma += numerosCPF[i] * (11 - i);
+            }
+            resto = soma % 11;
+            int dv2 = resto < 2 ? 0 : 11 - resto;
+            if (numerosCPF[10] != dv2)
+                return false;
+
+            return true;
+        }
     }
 }

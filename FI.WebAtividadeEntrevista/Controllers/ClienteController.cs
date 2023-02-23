@@ -26,7 +26,20 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
          {
             BoCliente bo = new BoCliente();
-            
+
+            if (bo.VerificarExistencia(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Não foi possível incluir o cliente, CPF já existe");
+            }
+
+
+            if (!bo.VerificarCPF(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Código verificador do CPF inválido");
+            }       
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -62,7 +75,19 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Alterar(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-       
+
+            if (bo.VerificarExistencia(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Não foi possível incluir o cliente, CPF já existe");
+            }
+
+            if (!bo.VerificarCPF(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Código verificador do CPF inválido");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -106,6 +131,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = cliente.Id,
                     CEP = cliente.CEP,
+                    CPF= cliente.CPF,   
                     Cidade = cliente.Cidade,
                     Email = cliente.Email,
                     Estado = cliente.Estado,
