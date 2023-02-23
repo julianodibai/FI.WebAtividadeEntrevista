@@ -24,7 +24,7 @@ namespace WebAtividadeEntrevista.Controllers
 
         [HttpPost]
         public JsonResult Incluir(ClienteModel model)
-        {
+         {
             BoCliente bo = new BoCliente();
             
             if (!this.ModelState.IsValid)
@@ -42,6 +42,7 @@ namespace WebAtividadeEntrevista.Controllers
                 model.Id = bo.Incluir(new Cliente()
                 {                    
                     CEP = model.CEP,
+                    CPF = model.CPF,
                     Cidade = model.Cidade,
                     Email = model.Email,
                     Estado = model.Estado,
@@ -77,6 +78,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = model.Id,
                     CEP = model.CEP,
+                    CPF = model.CPF,
                     Cidade = model.Cidade,
                     Email = model.Email,
                     Estado = model.Estado,
