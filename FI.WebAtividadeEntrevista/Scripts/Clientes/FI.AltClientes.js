@@ -12,6 +12,17 @@ $(document).ready(function () {
         $('#formCadastro #Logradouro').val(obj.Logradouro);
         $('#formCadastro #Telefone').val(obj.Telefone);
     }
+
+    $.ajax({
+        url: urlBeneficiariosList,
+        method: "GET",
+        success: function (data) {
+            $.each(data, function (index, data) {
+                $("tbody").append("<tr><td>" + data.CPF + "</td><td>" + data.Nome + "</td></tr>");
+            })
+        }
+    })
+
     $("#beneficiariosPopUp").dialog({
         autoOpen: false,
         modal: true,
@@ -24,24 +35,29 @@ $(document).ready(function () {
 
     $("#btnBeneficiarios").click(function () {
         $("#beneficiariosPopUp").dialog("open");
-
-        $("tbody").empty();
-
-        $.ajax({
-            url: urlBeneficiariosList,
-            method: "GET",
-            success: function (data) {
-                $.each(data, function (index, data) {
-                    $("tbody").append("<tr><td>" + data.CPF + "</td><td>" + data.Nome + "</td></tr>");
-                })
-            }
-        })
     });
 
     $("#btnIncluirBeneficiario").click(function () {
-        var nome = $("#NomeBeneficiario").val();
-        var cpf = $("#CPFBeneficiario").val();
-        $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "</td></tr>");
+        $.ajax({
+            url: urlVerificarCPF,
+            method: "POST",
+            data: {
+                "CPF": $("#CPFBeneficiario").val(),
+            },
+            error:
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                },
+            success:
+                function (r) {
+                    var nome = $("#NomeBeneficiario").val();
+                    var cpf = $("#CPFBeneficiario").val();
+                    $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "</td></tr>");
+                }
+        })
     });
 
     $('#formCadastro').submit(function (e) {

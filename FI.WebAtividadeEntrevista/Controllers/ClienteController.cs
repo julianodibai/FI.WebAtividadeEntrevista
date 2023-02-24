@@ -66,6 +66,37 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone
                 });
 
+                if (model.Id == 0)
+                {
+                    Response.StatusCode = 400;
+                    return Json("Erro ao incluir cliente");
+                }
+                    
+                return Json(model.Id);
+            }
+        }
+        public JsonResult IncluirBeneficiario(BeneficiarioModel model)
+        {
+            BoCliente bo = new BoCliente();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(Environment.NewLine, erros));
+            }
+            else
+            {
+
+                model.Id = bo.IncluirBeneficiario(new Beneficiario()
+                {
+                    CPF = model.CPF,
+                    Nome = model.Nome,
+                    IdCliente = model.IdCliente
+                });
 
                 return Json("Cadastro efetuado com sucesso");
             }
@@ -75,12 +106,6 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Alterar(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-
-            if (bo.VerificarExistencia(model.CPF))
-            {
-                Response.StatusCode = 400;
-                return Json("Não foi possível incluir o cliente, CPF já existe");
-            }
 
             if (!bo.VerificarCPF(model.CPF))
             {
@@ -150,7 +175,7 @@ namespace WebAtividadeEntrevista.Controllers
         [HttpGet]
         public ActionResult AlterarBeneficiarios(long id)
         {
-            var model = new BeneficiarioModel { Nome = "juliano", CPF="55555555" };
+            var model = new BeneficiarioModel { Nome = "juliano", CPF = "55555555" };
             return View(model);
         }
 
@@ -187,6 +212,31 @@ namespace WebAtividadeEntrevista.Controllers
             var beneficiarios = bo.ListarBeneficiario();
 
             return Json(beneficiarios, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult VerificarCPFBeneficiario(string CPF)
+        {
+            BoCliente bo = new BoCliente();
+
+            if(string.IsNullOrEmpty(CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("CPF vazio ou nulo");
+            }
+            if (bo.VerificarExistenciaBeneficiario(CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("CPF do beneficiário já existe");
+            }
+
+            if (!bo.VerificarCPF(CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Código verificador do CPF inválido");
+            }
+            Response.StatusCode = 200;
+            return Json("ok");
         }
     }
 }

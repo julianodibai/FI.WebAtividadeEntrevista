@@ -17,6 +17,11 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.Incluir(cliente);
         }
+        public long IncluirBeneficiario(DML.Beneficiario beneficiario)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            return cli.IncluirBeneficiario(beneficiario);
+        }
 
         /// <summary>
         /// Altera um cliente
@@ -82,6 +87,11 @@ namespace FI.AtividadeEntrevista.BLL
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.VerificarExistencia(CPF);
+        }
+        public bool VerificarExistenciaBeneficiario(string CPF)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            return cli.VerificarExistenciaBeneficiario(CPF);
         }
 
         public bool VerificarCPF(string CPF)
