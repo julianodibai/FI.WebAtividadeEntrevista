@@ -38,10 +38,13 @@ $(document).ready(function () {
     });
 
     $('#formCadastro').submit(function (e) {
+        var idCliente = "";
+        var sucess = "";
         e.preventDefault();
         $.ajax({
             url: urlPost,
             method: "POST",
+            async: false,
             data: {
                 "NOME": $(this).find("#Nome").val(),
                 "CEP": $(this).find("#CEP").val(),
@@ -55,39 +58,35 @@ $(document).ready(function () {
                 "Telefone": $(this).find("#Telefone").val()
             },
             error:
-            function (r) {
-                if (r.status == 400)
-                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
-                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-            },
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                },
             success:
                 function (r) {
+                    idCliente = r;
                     $.ajax({
-                        url: urlPost,
+                        url: urlIncluirBeneficiario,
                         method: "POST",
+                        async: false,
                         data: {
-                            "NOME": $(this).find("#Nome").val(),
-                            "CPF": $(this).find("#CPF").val(),
-                            "IDCLIENTE": r
+                            "NOME": nomeBenef,
+                            "CPF": cpfBenef,
+                            "IDCLIENTE": idCliente
                         },
-                        error:
-                            function (r) {
-                                if (r.status == 400)
-                                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                                else if (r.status == 500)
-                                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-                            },
                         success:
                             function (r) {
-                                ModalDialog("Sucesso!", "Cadastro efetuado com sucesso")
-                                $("#formCadastro")[0].reset();
-                                $("tbody").empty();
-                            },
-                    }
-        });
+                                sucess= "e Beneficiario";
+                            }
+                    });
+                    ModalDialog("Sucesso!", "Cliente " + sucess +" incluido com exito!")
+                    $("#formCadastro")[0].reset();                 
+                }
+        });    
     })
-    
+
 })
 
 function ModalDialog(titulo, texto) {

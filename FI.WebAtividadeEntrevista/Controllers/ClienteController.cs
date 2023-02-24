@@ -71,10 +71,11 @@ namespace WebAtividadeEntrevista.Controllers
                     Response.StatusCode = 400;
                     return Json("Erro ao incluir cliente");
                 }
-                    
+
                 return Json(model.Id);
             }
         }
+        [HttpPost]
         public JsonResult IncluirBeneficiario(BeneficiarioModel model)
         {
             BoCliente bo = new BoCliente();
