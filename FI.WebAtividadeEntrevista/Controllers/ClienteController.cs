@@ -24,7 +24,7 @@ namespace WebAtividadeEntrevista.Controllers
 
         [HttpPost]
         public JsonResult Incluir(ClienteModel model)
-         {
+        {
             BoCliente bo = new BoCliente();
 
             if (bo.VerificarExistencia(model.CPF))
@@ -38,7 +38,7 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 Response.StatusCode = 400;
                 return Json("Código verificador do CPF inválido");
-            }       
+            }
 
             if (!this.ModelState.IsValid)
             {
@@ -51,9 +51,9 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                
+
                 model.Id = bo.Incluir(new Cliente()
-                {                    
+                {
                     CEP = model.CEP,
                     CPF = model.CPF,
                     Cidade = model.Cidade,
@@ -66,7 +66,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone
                 });
 
-           
+
                 return Json("Cadastro efetuado com sucesso");
             }
         }
@@ -113,7 +113,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Sobrenome = model.Sobrenome,
                     Telefone = model.Telefone
                 });
-                               
+
                 return Json("Cadastro alterado com sucesso");
             }
         }
@@ -131,7 +131,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = cliente.Id,
                     CEP = cliente.CEP,
-                    CPF= cliente.CPF,   
+                    CPF = cliente.CPF,
                     Cidade = cliente.Cidade,
                     Email = cliente.Email,
                     Estado = cliente.Estado,
@@ -142,7 +142,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = cliente.Telefone
                 };
 
-            
+
             }
 
             return View(model);
@@ -173,6 +173,12 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
+        }
+        [HttpPost]
+        public JsonResult BeneficiariosList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
+        {
+
+            return Json("");
         }
     }
 }

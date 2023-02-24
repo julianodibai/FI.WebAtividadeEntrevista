@@ -79,6 +79,11 @@
 
     <div class="row">
         <div class="col-lg-12">
+            <div class="pull-left">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#beneficiariosPopUp" id="btnBeneficiarios">
+                    Beneficiários
+                </button>
+            </div>
             <div class="pull-right">
                 <button type="submit" class="btn btn-sm btn-success">Salvar</button>
                 @Html.ActionLink("Voltar", "Index", "Cliente", new { }, new { @class = "btn btn-sm btn-danger" })
@@ -86,5 +91,44 @@
         </div>
     </div>
 
+    <div class="modal fade" id="beneficiariosPopUp" tabindex="-1" role="dialog" aria-labelledby="beneficiariosPopUp" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width:45%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="beneficiáriosLabel">Beneficiários</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="CPF">CPF:</label>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="Nome">Nome:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <input required="required" type="text" class="form-control" id="CPF" name="CPF" placeholder="Ex.: 999.999.999-99" maxlength="14">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <input required="required" type="text" class="form-control" id="Nome" name="Nome" placeholder="Ex.: João" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-sm btn-success" id="btnIncluirBeneficiario">Incluir</button>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <table id="gridBeneficiarios" class="table"></table>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </form>
