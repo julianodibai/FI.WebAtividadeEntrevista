@@ -67,22 +67,28 @@ $(document).ready(function () {
             success:
                 function (r) {
                     idCliente = r;
-                    $.ajax({
-                        url: urlIncluirBeneficiario,
-                        method: "POST",
-                        async: false,
-                        data: {
-                            "NOME": nomeBenef,
-                            "CPF": cpfBenef,
-                            "IDCLIENTE": idCliente
-                        },
-                        success:
-                            function (r) {
-                                sucess= "e Beneficiario";
-                            }
+                    $('tbody tr').each(function () {
+                        cpf = $(this).find('td:eq(0)').text();
+                        nome = $(this).find('td:eq(1)').text();
+
+                        $.ajax({
+                            url: urlIncluirBeneficiario,
+                            method: "POST",
+                            async: false,
+                            data: {
+                                "NOME": nome,
+                                "CPF": cpf,
+                                "IDCLIENTE": idCliente
+                            },
+                            success:
+                                function (r) {
+                                    sucess = "e Beneficiario";
+                                }
+                        });
                     });
-                    ModalDialog("Sucesso!", "Cliente " + sucess +" incluido com exito!")
-                    $("#formCadastro")[0].reset();                 
+                    ModalDialog("Sucesso!", "Cliente " + sucess + " incluido com exito!")
+                    $("#formCadastro")[0].reset();        
+                             
                 }
         });    
     })
