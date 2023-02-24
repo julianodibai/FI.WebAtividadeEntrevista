@@ -147,6 +147,12 @@ namespace WebAtividadeEntrevista.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public ActionResult AlterarBeneficiarios(long id)
+        {
+            var model = new BeneficiarioModel { Nome = "juliano", CPF="55555555" };
+            return View(model);
+        }
 
         [HttpPost]
         public JsonResult ClienteList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
@@ -174,11 +180,13 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
-        [HttpPost]
-        public JsonResult BeneficiariosList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
+        [HttpGet]
+        public JsonResult BeneficiariosList()
         {
+            var bo = new BoCliente();
+            var beneficiarios = bo.ListarBeneficiario();
 
-            return Json("");
+            return Json(beneficiarios, JsonRequestBehavior.AllowGet);
         }
     }
 }

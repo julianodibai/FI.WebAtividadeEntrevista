@@ -12,6 +12,37 @@ $(document).ready(function () {
         $('#formCadastro #Logradouro').val(obj.Logradouro);
         $('#formCadastro #Telefone').val(obj.Telefone);
     }
+    $("#beneficiariosPopUp").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Fechar": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#btnBeneficiarios").click(function () {
+        $("#beneficiariosPopUp").dialog("open");
+
+        $("tbody").empty();
+
+        $.ajax({
+            url: urlBeneficiariosList,
+            method: "GET",
+            success: function (data) {
+                $.each(data, function (index, data) {
+                    $("tbody").append("<tr><td>" + data.CPF + "</td><td>" + data.Nome + "</td></tr>");
+                })
+            }
+        })
+    });
+
+    $("#btnIncluirBeneficiario").click(function () {
+        var nome = $("#NomeBeneficiario").val();
+        var cpf = $("#CPFBeneficiario").val();
+        $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "</td></tr>");
+    });
 
     $('#formCadastro').submit(function (e) {
         e.preventDefault();

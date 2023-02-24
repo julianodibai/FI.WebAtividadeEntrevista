@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 using FI.AtividadeEntrevista.DML;
 
 namespace FI.AtividadeEntrevista.DAL
@@ -102,7 +103,15 @@ namespace FI.AtividadeEntrevista.DAL
 
             return cli;
         }
+        internal List<Beneficiario> ListarBeneficiarios()
+        {
+            List<SqlParameter> parametros = new List<SqlParameter>();
 
+            DataSet ds = base.Consultar("FI_SP_ConsBeneficiario", parametros);
+            List<Beneficiario> cli = ConverterBeneficiario(ds);
+
+            return cli;
+        }
         /// <summary>
         /// Inclui um novo cliente
         /// </summary>
@@ -159,6 +168,24 @@ namespace FI.AtividadeEntrevista.DAL
                     cli.Nome = row.Field<string>("Nome");
                     cli.Sobrenome = row.Field<string>("Sobrenome");
                     cli.Telefone = row.Field<string>("Telefone");
+                    lista.Add(cli);
+                }
+            }
+
+            return lista;
+        }
+        private List<Beneficiario> ConverterBeneficiario(DataSet ds)
+        {
+            List<Beneficiario> lista = new List<Beneficiario>();
+            if (ds != null && ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    Beneficiario cli = new Beneficiario();
+                    cli.Id = row.Field<long>("Id");
+                    cli.CPF = row.Field<string>("CPF");
+                    cli.Nome = row.Field<string>("Nome");
+                    cli.IdCliente = row.Field<long>("IdCliente");
                     lista.Add(cli);
                 }
             }

@@ -1,43 +1,23 @@
 ﻿
 $(document).ready(function () {
-    $("#beneficiariosPopUp").dialog({
-        autoOpen: false,
-        modal: true,
-        buttons: {
-            "Fechar": function () {
-                $(this).dialog("close");
-            }
-        }
-    });
-    $('#gridBeneficiarios').jtable({
-        paging: true, //Enable paging
-        pageSize: 3, //Set page size (default: 10)
-        sorting: true, //Enable sorting
-        defaultSorting: 'Nome ASC', //Set default sorting
-        actions: {
-            listAction: urlBeneficiariosList,
-        },
-        fields: {
-            CPF: {
-                title: 'CPF',
-                width: '35%'
-            },
-            Nome: {
-                title: 'Nome',
-                width: '35%'
-            },
-            Alterar: {
-                title: '',
-                display: function (data) {
-                    return '<button onclick="window.location.href=\'' + urlAlteracao + '/' + data.record.Id + '\'" class="btn btn-primary btn-sm">Alterar</button>';
+    $("#btnBeneficiarios").click(function () {
+        $("#beneficiariosPopUp").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Fechar": function () {
+                    $(this).dialog("close");
                 }
             }
-        }
-     });
+        });
 
-    $("#btnBeneficiarios").click(function () {
         $("#beneficiariosPopUp").dialog("open");
-        $('#gridBeneficiarios').jtable('load');
+    });
+
+    $("#btnIncluirBeneficiario").click(function () {
+        var nome = $("#NomeBeneficiario").val();
+        var cpf = $("#CPFBeneficiario").val();
+        $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "</td></tr>");
     });
 
     $('#formCadastro').submit(function (e) {
