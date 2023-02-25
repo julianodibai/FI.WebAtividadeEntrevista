@@ -140,7 +140,9 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone
                 });
 
-                return Json("Cadastro alterado com sucesso");
+                var cli = bo.BuscarCliente(model.CPF);
+
+                return Json(cli.Id);
             }
         }
 
@@ -173,11 +175,35 @@ namespace WebAtividadeEntrevista.Controllers
 
             return View(model);
         }
-        [HttpGet]
-        public ActionResult AlterarBeneficiarios(long id)
+        [HttpPost]
+        public JsonResult AlterarBeneficiarios(BeneficiarioModel model)
         {
-            var model = new BeneficiarioModel { Nome = "juliano", CPF = "55555555" };
-            return View(model);
+            BoCliente bo = new BoCliente();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(Environment.NewLine, erros));
+            }
+            else
+            {
+                bo.AlterarBeneficiario(new Beneficiario()
+                {
+                    CPF = model.CPF,
+                    Nome = model.Nome,
+                    IdCliente = model.IdCliente
+
+                });
+
+                return Json("Cadastro alterado com sucesso");
+            }
+
+
+            
         }
 
         [HttpPost]
@@ -207,10 +233,10 @@ namespace WebAtividadeEntrevista.Controllers
             }
         }
         [HttpGet]
-        public JsonResult BeneficiariosList()
+        public JsonResult BeneficiariosList(long idCliente)
         {
             var bo = new BoCliente();
-            var beneficiarios = bo.ListarBeneficiario();
+            var beneficiarios = bo.ListarBeneficiario(idCliente);
 
             return Json(beneficiarios, JsonRequestBehavior.AllowGet);
         }

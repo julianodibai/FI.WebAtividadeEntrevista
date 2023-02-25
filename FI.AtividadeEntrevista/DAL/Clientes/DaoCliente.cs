@@ -80,6 +80,20 @@ namespace FI.AtividadeEntrevista.DAL
 
             return ds.Tables[0].Rows.Count > 0;
         }
+
+        internal Cliente BuscarClientePorCPF(string CPF)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
+
+            DataSet ds = base.Consultar("FI_SP_VerificaCliente", parametros);
+            List<DML.Cliente> cli = Converter(ds);
+
+            var cliente = cli.FirstOrDefault();
+
+            return cliente;
+        }
         internal bool VerificarExistenciaBeneficiario(string CPF)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
@@ -127,9 +141,11 @@ namespace FI.AtividadeEntrevista.DAL
 
             return cli;
         }
-        internal List<Beneficiario> ListarBeneficiarios()
+        internal List<Beneficiario> ListarBeneficiarios(long idCliente)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", idCliente));
 
             DataSet ds = base.Consultar("FI_SP_ConsBeneficiario", parametros);
             List<Beneficiario> cli = ConverterBeneficiario(ds);
@@ -157,6 +173,21 @@ namespace FI.AtividadeEntrevista.DAL
             parametros.Add(new System.Data.SqlClient.SqlParameter("ID", cliente.Id));
 
             base.Executar("FI_SP_AltCliente", parametros);
+        }
+
+        internal long AlterarBeneficiario(DML.Beneficiario cliente)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", cliente.Nome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", cliente.CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", cliente.IdCliente));
+
+            DataSet ds = base.Consultar("FI_SP_AltBenef", parametros);
+            long ret = 0;
+            if (ds.Tables[0].Rows.Count > 0)
+                long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
+            return ret;
         }
 
 

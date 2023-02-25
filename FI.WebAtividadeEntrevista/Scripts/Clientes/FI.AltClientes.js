@@ -11,17 +11,34 @@ $(document).ready(function () {
         $('#formCadastro #Cidade').val(obj.Cidade);
         $('#formCadastro #Logradouro').val(obj.Logradouro);
         $('#formCadastro #Telefone').val(obj.Telefone);
-    }
 
-    $.ajax({
-        url: urlBeneficiariosList,
-        method: "GET",
-        success: function (data) {
-            $.each(data, function (index, data) {
-                $("tbody").append("<tr><td>" + data.CPF + "</td><td>" + data.Nome + "</td></tr>");
-            })
-        }
-    })
+        $.ajax({
+            url: urlBeneficiariosList,
+            method: "GET",
+            data: {
+                "idCliente": obj.Id
+            },
+            success: function (data) {
+                $.each(data, function (index, beneficiario) {
+                    $("tbody").append("<tr><td>" + beneficiario.CPF + "</td><td>" + beneficiario.Nome + "</td></tr>");
+                })
+            }
+        })
+    }
+    //var idCliente = "";
+    //$.ajax({
+    //    url: urlBuscarCliente,
+    //    method: "GET",
+    //    data: {
+    //        "CPF": obj.CPF
+    //    },
+    //    success:
+    //        function (r) {
+    //            idCliente = r
+              
+    //        }
+    //})
+
 
     $("#beneficiariosPopUp").dialog({
         autoOpen: false,
@@ -61,6 +78,7 @@ $(document).ready(function () {
     });
 
     $('#formCadastro').submit(function (e) {
+        var idCliente = "";
         e.preventDefault();
         
         $.ajax({
@@ -86,11 +104,31 @@ $(document).ready(function () {
                     ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
             },
             success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
-                $("#formCadastro")[0].reset();                                
-                window.location.href = urlRetorno;
-            }
+                function (r) {
+                    idCliente = r;
+                    $('tbody tr').each(function () {
+                        cpf = $(this).find('td:eq(0)').text();
+                        nome = $(this).find('td:eq(1)').text();
+
+                        $.ajax({
+                            url: urlAlterarBeneficiario,
+                            method: "POST",
+                            async: false,
+                            data: {
+                                "NOME": nome,
+                                "CPF": cpf,
+                                "IDCLIENTE": idCliente
+                            },
+                            success:
+                                function (r) {
+                                    sucess = "e Beneficiario";
+                                }
+                        });
+                    });
+                    ModalDialog("Sucesso!", "Cliente " + sucess + " incluido com exito!")
+                    $("#formCadastro")[0].reset();
+
+                }
         });
     })
     

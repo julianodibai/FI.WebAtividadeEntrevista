@@ -33,6 +33,12 @@ namespace FI.AtividadeEntrevista.BLL
             cli.Alterar(cliente);
         }
 
+        public void AlterarBeneficiario(DML.Beneficiario cliente)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            cli.AlterarBeneficiario(cliente);
+        }
+
         /// <summary>
         /// Consulta o cliente pelo id
         /// </summary>
@@ -63,10 +69,10 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.Listar();
         }
-        public List<DML.Beneficiario> ListarBeneficiario()
+        public List<DML.Beneficiario> ListarBeneficiario(long id)
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
-            return cli.ListarBeneficiarios();
+            return cli.ListarBeneficiarios(id);
         }
 
         /// <summary>
@@ -94,6 +100,11 @@ namespace FI.AtividadeEntrevista.BLL
             return cli.VerificarExistenciaBeneficiario(CPF);
         }
 
+        public DML.Cliente BuscarCliente(string CPF)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            return cli.BuscarClientePorCPF(CPF);
+        }
         public bool VerificarCPF(string CPF)
         {
             int[] numerosCPF = new int[11];
