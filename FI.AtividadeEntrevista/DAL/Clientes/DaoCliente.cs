@@ -175,19 +175,16 @@ namespace FI.AtividadeEntrevista.DAL
             base.Executar("FI_SP_AltCliente", parametros);
         }
 
-        internal long AlterarBeneficiario(DML.Beneficiario cliente)
+        internal void AlterarBeneficiario(DML.Beneficiario cliente)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", cliente.Id));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", cliente.Nome));
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", cliente.CPF));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", cliente.IdCliente));
 
-            DataSet ds = base.Consultar("FI_SP_AltBenef", parametros);
-            long ret = 0;
-            if (ds.Tables[0].Rows.Count > 0)
-                long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
-            return ret;
+            base.Executar("FI_SP_AltBenef", parametros);
+
         }
 
 

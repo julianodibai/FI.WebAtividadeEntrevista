@@ -69,10 +69,10 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.Listar();
         }
-        public List<DML.Beneficiario> ListarBeneficiario(long id)
+        public List<DML.Beneficiario> ListarBeneficiario(long idCliente)
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
-            return cli.ListarBeneficiarios(id);
+            return cli.ListarBeneficiarios(idCliente);
         }
 
         /// <summary>

@@ -15,27 +15,69 @@ $(document).ready(function () {
     });
 
     $("#btnIncluirBeneficiario").click(function () {
-        $.ajax({
-            url: urlVerificarCPF,
-            method: "POST",
-            data: {
-                "CPF": $("#CPFBeneficiario").val(),
-            },
-            error:
-                function (r) {
-                    if (r.status == 400)
-                        ModalDialog("Ocorreu um erro", r.responseJSON);
-                    else if (r.status == 500)
-                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+  
+        if (ExisteCPFnaGridBeneficiario($("#CPFBeneficiario").val())) {
+            ModalDialog("Ocorreu um erro", "Já existe cpf nessa tabela.");
+        }
+        else {
+            $.ajax({
+                url: urlVerificarCPF,
+                method: "POST",
+                data: {
+                    "CPF": $("#CPFBeneficiario").val(),
                 },
-            success:
-                function (r) {
-                    var nome = $("#NomeBeneficiario").val();
-                    var cpf = $("#CPFBeneficiario").val();
-                    $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "</td></tr>");
-                }
-        })
+                error:
+                    function (r) {
+                        if (r.status == 400)
+                            ModalDialog("Ocorreu um erro", r.responseJSON);
+                        else if (r.status == 500)
+                            ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                    },
+                success:
+                    function (r) {
+                        var nome = $("#NomeBeneficiario").val();
+                        var cpf = $("#CPFBeneficiario").val();
+                        $("tbody").append("<tr><td>" + cpf + "</td><td>" + nome + "<td style='display: flex;gap: 10px;justify-content: end;'><button type='submit' class='btn btn-primary btn-editar'>Alterar</button><button class='btn btn-primary btn-excluir'>Excluir</button></td></tr>");
+                    }
+            })
+        }     
     });
+
+    $('tbody').on('click', '.btn-editar', function () {   
+        var nome = prompt("Digite o novo nome:");
+        var cpf = prompt("Digite o novo CPF:");
+        var linha = $(this).closest('tr');
+
+        if (ExisteCPFnaGridBeneficiario(cpf)) {
+            ModalDialog("Ocorreu um erro", "Já existe esse cpf nessa tabela.");
+        }
+        else {
+            $.ajax({
+                url: urlVerificarCPF,
+                method: "POST",
+                data: {
+                    "CPF": cpf
+                },
+                error:
+                    function (r) {
+                        if (r.status == 400)
+                            ModalDialog("Ocorreu um erro", r.responseJSON);
+                        else if (r.status == 500)
+                            ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                    },
+                success:
+                    function () {
+                        linha.find('td:eq(0)').text(cpf);
+                        linha.find('td:eq(1)').text(nome);
+                    }
+            });
+        }
+    });
+
+    $('tbody').on('click', '.btn-excluir', function () {
+        $(this).closest('tr').remove();
+    });
+
 
     $('#formCadastro').submit(function (e) {
         var idCliente = "";
@@ -94,6 +136,21 @@ $(document).ready(function () {
     })
 
 })
+
+function ExisteCPFnaGridBeneficiario(cpf) {
+    var cpfEncontrado = false;
+
+    $("tbody tr").each(function () {
+        var cpfLinha = $(this).find('td:eq(0)').text();
+
+        if (cpfLinha == cpf) {
+            cpfEncontrado = true;
+            return false; 
+        }
+    });
+
+    return cpfEncontrado;
+}
 
 function ModalDialog(titulo, texto) {
     var random = Math.random().toString().replace('.', '');

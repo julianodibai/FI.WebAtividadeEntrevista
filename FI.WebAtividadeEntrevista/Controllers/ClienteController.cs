@@ -140,9 +140,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone
                 });
 
-                var cli = bo.BuscarCliente(model.CPF);
-
-                return Json(cli.Id);
+                return Json(model.Id);
             }
         }
 
@@ -191,8 +189,10 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
+
                 bo.AlterarBeneficiario(new Beneficiario()
                 {
+                    Id = model.Id,
                     CPF = model.CPF,
                     Nome = model.Nome,
                     IdCliente = model.IdCliente
