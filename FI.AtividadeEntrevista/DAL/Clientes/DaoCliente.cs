@@ -200,6 +200,14 @@ namespace FI.AtividadeEntrevista.DAL
 
             base.Executar("FI_SP_DelCliente", parametros);
         }
+        internal void ExcluirBeneficiario(long Id)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", Id));
+
+            base.Executar("FI_SP_DelBeneficiario", parametros);
+        }
 
         private List<DML.Cliente> Converter(DataSet ds)
         {

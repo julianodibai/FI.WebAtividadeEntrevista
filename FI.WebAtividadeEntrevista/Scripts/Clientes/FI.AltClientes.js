@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
         $('#formCadastro #CEP').val(obj.CEP);
@@ -100,6 +99,31 @@ $(document).ready(function () {
         }
     });
 
+
+    $('tbody').on('click', '.btn-excluir', function () {
+        var linha = $(this).closest('tr');
+        id = linha.find("td[style='display: none;']").text();
+
+        if (id != 0) {
+            $.ajax({
+                url: urlExcluirBeneficiario,
+                method: "DELETE",
+                data: {
+                    "Id": id
+                },
+                success:
+                    function () {
+                        linha.remove();
+                    }
+            });             
+        }
+        else {
+            linha.remove();
+        }
+
+        
+    });
+
     $('#formCadastro').submit(function (e) {
         var idCliente = "";
         e.preventDefault();
@@ -151,7 +175,6 @@ $(document).ready(function () {
                         });
                     });
                     ModalDialog("Sucesso!", "Cliente " + sucess + " incluido com exito!")
-                    $("#formCadastro")[0].reset();
 
                 }
         });

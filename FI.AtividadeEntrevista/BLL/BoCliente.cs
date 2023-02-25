@@ -60,6 +60,11 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             cli.Excluir(id);
         }
+        public void ExcluirBeneficiario(long id)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            cli.ExcluirBeneficiario(id);
+        }
 
         /// <summary>
         /// Lista os clientes

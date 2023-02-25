@@ -178,18 +178,35 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
 
-            if (!this.ModelState.IsValid)
+            if (bo.VerificarExistencia(model.CPF))
             {
-                List<string> erros = (from item in ModelState.Values
-                                      from error in item.Errors
-                                      select error.ErrorMessage).ToList();
-
                 Response.StatusCode = 400;
-                return Json(string.Join(Environment.NewLine, erros));
+                return Json("Não foi possível incluir o Beneficiário, CPF já existe");
+            }
+
+            if(string.IsNullOrEmpty(model.Nome))
+            {
+                Response.StatusCode = 400;
+                return Json("Não foi possível incluir o Beneficiário, preencha o nome de forma correta");
+            }
+
+            if(model.IdCliente == 0)
+            {
+                Response.StatusCode = 500;
+                return Json("Não foi possível incluir o Beneficiário");
+            }
+
+            if (model.Id == 0)
+            {
+                model.Id = bo.IncluirBeneficiario(new Beneficiario()
+                {
+                    CPF = model.CPF,
+                    Nome = model.Nome,
+                    IdCliente = model.IdCliente
+                });
             }
             else
-            {
-
+            { 
                 bo.AlterarBeneficiario(new Beneficiario()
                 {
                     Id = model.Id,
@@ -199,11 +216,9 @@ namespace WebAtividadeEntrevista.Controllers
 
                 });
 
-                return Json("Cadastro alterado com sucesso");
             }
 
-
-            
+            return Json("Cadastro alterado com sucesso");          
         }
 
         [HttpPost]
@@ -264,6 +279,16 @@ namespace WebAtividadeEntrevista.Controllers
             }
             Response.StatusCode = 200;
             return Json("ok");
+        }
+
+        [HttpDelete]
+        public ActionResult ExcluirBeneficiario(long id)
+        {
+            BoCliente bo = new BoCliente();
+            
+            bo.ExcluirBeneficiario(id);
+
+            return Json(bo);
         }
     }
 }
