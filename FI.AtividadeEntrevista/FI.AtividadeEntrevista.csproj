@@ -75,7 +75,14 @@
     <EmbeddedResource Include="DAL\Clientes\Procedures\FI_SP_AltCliente.sql" />
     <EmbeddedResource Include="DAL\Clientes\Procedures\FI_SP_IncCliente.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DAL\Clientes\Procedures\FI_SP_AltBenef.sql" />
+    <Content Include="DAL\Clientes\Procedures\FI_SP_ConsBeneficiario.sql" />
+    <Content Include="DAL\Clientes\Procedures\FI_SP_DelBeneficiario.sql" />
+    <Content Include="DAL\Clientes\Procedures\FI_SP_IncBeneficiario.sql" />
+    <Content Include="DAL\Clientes\Procedures\FI_SP_VerificaBeneficiario.sql" />
+    <Content Include="DAL\Clientes\Procedures\FI_SP_VerificaCliente.sql" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
