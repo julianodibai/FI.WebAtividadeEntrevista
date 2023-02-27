@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    $("#formCadastro #CPF").inputmask("mask", { "mask": "999.999.999-99" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    $("#formCadastro #CEP").inputmask("mask", { "mask": "99999-999" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    $("#formCadastro #Telefone").inputmask("mask", { "mask": "(99) 9999-99999" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
         $('#formCadastro #CEP').val(obj.CEP);
@@ -19,7 +23,9 @@
             },
             success: function (data) {
                 $.each(data, function (index, beneficiario) {
-                    $("tbody").append("<tr><td>" + beneficiario.CPF + "</td><td>" + beneficiario.Nome + "</td><td style='display: none;' >" + beneficiario.Id + "</td><td style='display: flex;gap: 10px;justify-content: end;'><button type='submit' class='btn btn-primary btn-editar'>Alterar</button><button class='btn btn-primary btn-excluir'>Excluir</button></td></tr>");
+                    var cpfBeneficiario = beneficiario.CPF.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+
+                    $("tbody").append("<tr><td>" + cpfBeneficiario + "</td><td>" + beneficiario.Nome + "</td><td style='display: none;' >" + beneficiario.Id + "</td><td style='display: flex;gap: 10px;justify-content: end;'><button type='submit' class='btn btn-primary btn-editar'>Alterar</button><button class='btn btn-primary btn-excluir'>Excluir</button></td></tr>");
                 })
             }
         })
@@ -37,11 +43,12 @@
 
     $("#btnBeneficiarios").click(function () {
         $("#beneficiariosPopUp").dialog("open");
+        $("#CPFBeneficiario").inputmask("mask", { "mask": "999.999.999-99" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
     });
 
     $("#btnIncluirBeneficiario").click(function () {
 
-        if (ExisteCPFnaGridBeneficiario($("#CPFBeneficiario").val())) {
+        if (ExisteCPFnaGridBeneficiario($("#CPFBeneficiario").inputmask("unmaskedvalue"))) {
             ModalDialog("Ocorreu um erro", "Já existe esse cpf nessa tabela.");
         }
         else {
@@ -49,7 +56,7 @@
                 url: urlVerificarCPF,
                 method: "POST",
                 data: {
-                    "CPF": $("#CPFBeneficiario").val(),
+                    "CPF": $("#CPFBeneficiario").inputmask("unmaskedvalue"),
                 },
                 error:
                     function (r) {
@@ -133,15 +140,15 @@
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "CPF": $(this).find("#CPF").val(),
+                "CEP": $(this).find("#CEP").inputmask("unmaskedvalue"),
+                "CPF": $(this).find("#CPF").inputmask("unmaskedvalue"),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": $(this).find("#Telefone").inputmask("unmaskedvalue")
             },
             error:
             function (r) {
@@ -157,6 +164,8 @@
                         cpf = $(this).find('td:eq(0)').text();
                         nome = $(this).find('td:eq(1)').text();
                         id = $(this).find("td[style='display: none;']").text();
+
+                        cpf = cpf.replace(/\D/g, '');
 
                         $.ajax({
                             url: urlAlterarBeneficiario,
@@ -175,10 +184,9 @@
                         });
                     });
                     ModalDialog("Sucesso!", "Cliente " + sucess + " incluido com exito!")
-
                 }
         });
-    })
+    });
     
 })
 
@@ -187,6 +195,8 @@ function ExisteCPFnaGridBeneficiario(cpf) {
 
     $("tbody tr").each(function () {
         var cpfLinha = $(this).find('td:eq(0)').text();
+
+        cpfLinha = cpfLinha.replace(/\D/g, '');
 
         if (cpfLinha == cpf) {
             cpfEncontrado = true;

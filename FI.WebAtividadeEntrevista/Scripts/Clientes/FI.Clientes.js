@@ -1,5 +1,8 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
+    $("#formCadastro #CPF").inputmask("mask", { "mask": "999.999.999-99" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    $("#formCadastro #CEP").inputmask("mask", { "mask": "99999-999" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    $("#formCadastro #Telefone").inputmask("mask", { "mask": "(99) 9999-99999" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
+
     $("#btnBeneficiarios").click(function () {
         $("#beneficiariosPopUp").dialog({
             autoOpen: false,
@@ -10,13 +13,13 @@ $(document).ready(function () {
                 }
             }
         });
-
         $("#beneficiariosPopUp").dialog("open");
+        $("#CPFBeneficiario").inputmask("mask", { "mask": "999.999.999-99" }, { 'autoUnmask': true, 'removeMaskOnSubmit': true });
     });
 
     $("#btnIncluirBeneficiario").click(function () {
   
-        if (ExisteCPFnaGridBeneficiario($("#CPFBeneficiario").val())) {
+        if (ExisteCPFnaGridBeneficiario($("#CPFBeneficiario").inputmask("unmaskedvalue"))) {
             ModalDialog("Ocorreu um erro", "Já existe cpf nessa tabela.");
         }
         else {
@@ -24,7 +27,7 @@ $(document).ready(function () {
                 url: urlVerificarCPF,
                 method: "POST",
                 data: {
-                    "CPF": $("#CPFBeneficiario").val(),
+                    "CPF": $("#CPFBeneficiario").inputmask("unmaskedvalue"),
                 },
                 error:
                     function (r) {
@@ -83,21 +86,22 @@ $(document).ready(function () {
         var idCliente = "";
         var sucess = "";
         e.preventDefault();
+
         $.ajax({
             url: urlPost,
             method: "POST",
             async: false,
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "CPF": $(this).find("#CPF").val(),
+                "CEP": $(this).find("#CEP").inputmask("unmaskedvalue"),
+                "CPF": $(this).find("#CPF").inputmask("unmaskedvalue"),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": $(this).find("#Telefone").inputmask("unmaskedvalue")
             },
             error:
                 function (r) {
@@ -112,6 +116,7 @@ $(document).ready(function () {
                     $('tbody tr').each(function () {
                         cpf = $(this).find('td:eq(0)').text();
                         nome = $(this).find('td:eq(1)').text();
+                        cpf = cpf.replace(/\D/g, '');
 
                         $.ajax({
                             url: urlIncluirBeneficiario,
@@ -129,11 +134,11 @@ $(document).ready(function () {
                         });
                     });
                     ModalDialog("Sucesso!", "Cliente " + sucess + " incluido com exito!")
-                    $("#formCadastro")[0].reset();        
-                             
+                    $("#formCadastro")[0].reset();
+
                 }
-        });    
-    })
+        });
+    });
 
 })
 
@@ -142,6 +147,8 @@ function ExisteCPFnaGridBeneficiario(cpf) {
 
     $("tbody tr").each(function () {
         var cpfLinha = $(this).find('td:eq(0)').text();
+
+        cpfLinha = cpfLinha.replace(/\D/g, '');
 
         if (cpfLinha == cpf) {
             cpfEncontrado = true;

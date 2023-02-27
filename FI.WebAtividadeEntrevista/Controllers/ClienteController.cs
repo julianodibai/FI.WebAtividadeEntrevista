@@ -178,21 +178,18 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
 
-            if (bo.VerificarExistencia(model.CPF))
-            {
-                Response.StatusCode = 400;
+            if (bo.VerificarExistenciaBeneficiario(model.CPF))
+            {                
                 return Json("Não foi possível incluir o Beneficiário, CPF já existe");
             }
 
             if(string.IsNullOrEmpty(model.Nome))
             {
-                Response.StatusCode = 400;
                 return Json("Não foi possível incluir o Beneficiário, preencha o nome de forma correta");
             }
 
             if(model.IdCliente == 0)
             {
-                Response.StatusCode = 500;
                 return Json("Não foi possível incluir o Beneficiário");
             }
 
