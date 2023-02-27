@@ -2,7 +2,7 @@
 
 ## :memo: Descrição
 * Projeto Web MVC ASP.NET
-*  De acordo com oque foi solicitado ⇒ foi implementado o campo de CPF com validação e mascara, botão e Pop-Up de Beneficiários, a inclusão e alteração de beneficiários vinculados ao Cliente
+*  De acordo com oque foi solicitado foi implementado ⇒ o campo de CPF com validação e mascara, botão e Pop-Up de Beneficiários, a inclusão e alteração de beneficiários vinculados ao Cliente
 
 
 ## 🚀 Instruções de uso
